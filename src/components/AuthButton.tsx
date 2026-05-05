@@ -8,10 +8,7 @@ export default async function AuthButton() {
 
   if (!user) {
     return (
-      <Link
-        href="/login"
-        className="text-sm font-medium text-gray-700 hover:text-gray-900"
-      >
+      <Link href="/login" style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-muted)', textDecoration: 'none', padding: '6px 14px', border: '1px solid var(--border)', borderRadius: 8, background: 'var(--surface)' }}>
         로그인
       </Link>
     )
@@ -24,18 +21,15 @@ export default async function AuthButton() {
     .single()
 
   return (
-    <div className="flex items-center gap-3">
+    <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
       {profile?.is_admin && (
-        <Link href="/admin" className="text-xs font-semibold bg-red-100 text-red-700 px-2 py-0.5 rounded-full hover:bg-red-200">
+        <Link href="/admin" style={{ fontSize: 10, fontWeight: 600, color: 'var(--orange)', background: 'var(--orange-dim)', border: '1px solid var(--orange-border)', padding: '3px 8px', borderRadius: 4, textDecoration: 'none', letterSpacing: 0.5 }}>
           ADMIN
         </Link>
       )}
-      <span className="text-sm text-gray-700">{profile?.name}</span>
+      <span style={{ fontSize: 13, color: 'var(--text-muted)' }}>{profile?.name}</span>
       <form action={signOut}>
-        <button
-          type="submit"
-          className="text-sm text-gray-500 hover:text-gray-700"
-        >
+        <button type="submit" style={{ fontSize: 12, color: 'var(--text-dim)', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>
           로그아웃
         </button>
       </form>
