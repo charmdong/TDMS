@@ -27,9 +27,7 @@ function CompetitionCard({ c, idx }: { c: Competition; idx: number }) {
 
   return (
     <Link href={`/competitions/${c.id}`} style={{ textDecoration: 'none' }}>
-      <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 12, overflow: 'hidden', cursor: 'pointer', transition: 'border-color .15s' }}
-        onMouseEnter={e => (e.currentTarget.style.borderColor = 'rgba(244,80,30,.4)')}
-        onMouseLeave={e => (e.currentTarget.style.borderColor = 'var(--border)')}>
+      <div className="card-hover" style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 12, overflow: 'hidden', cursor: 'pointer' }}>
         {/* Banner */}
         <div style={{ height: 72, background: accent.bg, backgroundImage: accent.pattern, position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'flex-end', padding: '0 12px' }}>
           <div style={{ position: 'absolute', inset: 0, backgroundImage: 'repeating-linear-gradient(45deg, rgba(255,255,255,.015) 0px, rgba(255,255,255,.015) 1px, transparent 1px, transparent 12px)' }} />

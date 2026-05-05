@@ -10,9 +10,7 @@ export default function LoginPage() {
             <div style={{ fontSize: 12, color: 'var(--text-dim)', letterSpacing: 0.5 }}>THROWDOWN MANAGEMENT SYSTEM</div>
           </div>
           <form action={signInWithGoogle} style={{ width: '100%' }}>
-            <button type="submit" style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, padding: '12px 0', border: '1px solid var(--border)', borderRadius: 10, background: 'var(--surface-2)', color: 'var(--text)', fontSize: 14, fontWeight: 500, cursor: 'pointer', fontFamily: 'inherit' }}
-              onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(244,80,30,.4)' }}
-              onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = 'var(--border)' }}>
+            <button type="submit" className="btn-hover" style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, padding: '12px 0', border: '1px solid var(--border)', borderRadius: 10, background: 'var(--surface-2)', color: 'var(--text)', fontSize: 14, fontWeight: 500, cursor: 'pointer', fontFamily: 'inherit' }}>
               <GoogleIcon />
               Google로 계속하기
             </button>

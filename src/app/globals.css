@@ -26,3 +26,14 @@ body {
 * {
   border-color: var(--border);
 }
+
+.card-hover {
+  transition: border-color .15s;
+}
+.card-hover:hover {
+  border-color: rgba(244, 80, 30, 0.4) !important;
+}
+
+.btn-hover:hover {
+  border-color: rgba(244, 80, 30, 0.4) !important;
+}
