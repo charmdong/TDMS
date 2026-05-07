@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Geist } from 'next/font/google'
 import './globals.css'
+import Link from 'next/link'
 import AuthButton from '@/components/AuthButton'
 
 const geist = Geist({ subsets: ['latin'] })
@@ -16,9 +17,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className={geist.className} style={{ background: 'var(--bg)', color: 'var(--text)', minHeight: '100vh' }}>
         <header style={{ background: 'var(--bg)', borderBottom: '1px solid var(--border)', position: 'sticky', top: 0, zIndex: 10 }}>
           <div style={{ maxWidth: 960, margin: '0 auto', padding: '0 16px', height: 52, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <a href="/" style={{ fontSize: 16, fontWeight: 500, letterSpacing: '-0.5px', color: 'var(--text)', textDecoration: 'none' }}>
+            <Link href="/" style={{ fontSize: 16, fontWeight: 500, letterSpacing: '-0.5px', color: 'var(--text)', textDecoration: 'none' }}>
               TDMS
-            </a>
+            </Link>
             <AuthButton />
           </div>
         </header>

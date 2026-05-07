@@ -1,7 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
-import { MapPin, Calendar, Clock, Zap, Users, ArrowRight, CheckCircle } from 'lucide-react'
+import { MapPin, Calendar, Clock, Zap, ArrowRight, CheckCircle } from 'lucide-react'
 import { unregister } from './register/actions'
 
 const STATUS_LABEL: Record<string, string> = {

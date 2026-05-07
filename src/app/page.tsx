@@ -1,6 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import Link from 'next/link'
-import { MapPin, Calendar, Users, ArrowRight, ChevronRight } from 'lucide-react'
+import { MapPin, Calendar, ArrowRight } from 'lucide-react'
 import { Database } from '@/types/supabase'
 
 type Competition = Database['public']['Tables']['competitions']['Row']

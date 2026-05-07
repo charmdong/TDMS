@@ -1,4 +1,3 @@
-import { createClient } from '@/lib/supabase/server'
 import { requireUser } from '@/lib/auth'
 import { notFound, redirect } from 'next/navigation'
 import { registerAthlete } from './actions'
