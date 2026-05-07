@@ -1,16 +1,16 @@
 @import "tailwindcss";
 
 :root {
-  --bg:        #0C0C0E;
-  --surface:   #141416;
-  --surface-2: #1C1C20;
-  --border:    #242428;
-  --orange:    #F4501E;
-  --orange-dim: rgba(244,80,30,0.12);
-  --orange-border: rgba(244,80,30,0.35);
-  --text:      #FFFFFF;
-  --text-muted:#888888;
-  --text-dim:  #555555;
+  --bg:        #F8F8F8;
+  --surface:   #FFFFFF;
+  --surface-2: #F2F2F4;
+  --border:    #E4E4E8;
+  --orange:    #E03E10;
+  --orange-dim: rgba(224,62,16,0.08);
+  --orange-border: rgba(224,62,16,0.3);
+  --text:      #111111;
+  --text-muted:#555555;
+  --text-dim:  #999999;
 }
 
 @theme inline {

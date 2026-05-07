@@ -4,11 +4,11 @@ import Link from 'next/link'
 const STATUS_LABEL: Record<string, string> = {
   draft: '준비 중', open: '신청 가능', in_progress: '진행 중', closed: '종료',
 }
-const STATUS_COLOR: Record<string, string> = {
-  draft: 'bg-gray-100 text-gray-600',
-  open: 'bg-blue-100 text-blue-700',
-  in_progress: 'bg-green-100 text-green-700',
-  closed: 'bg-gray-100 text-gray-500',
+const STATUS_STYLE: Record<string, { background: string; color: string }> = {
+  draft:       { background: 'rgba(0,0,0,.05)',       color: 'var(--text-dim)' },
+  open:        { background: 'rgba(55,100,200,.1)',   color: '#2255b0' },
+  in_progress: { background: 'rgba(34,139,34,.1)',    color: '#1a7a1a' },
+  closed:      { background: 'rgba(0,0,0,.05)',       color: 'var(--text-dim)' },
 }
 
 export default async function AdminPage() {
@@ -19,41 +19,34 @@ export default async function AdminPage() {
     .order('created_at', { ascending: false })
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-xl font-bold">대회 관리</h1>
-        <Link
-          href="/admin/competitions/new"
-          className="px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-xl hover:bg-gray-700 transition-colors"
-        >
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <h1 style={{ fontSize: 18, fontWeight: 500, color: 'var(--text)', margin: 0 }}>대회 관리</h1>
+        <Link href="/admin/competitions/new" style={{ padding: '8px 16px', background: 'var(--text)', color: 'var(--bg)', fontSize: 13, fontWeight: 500, borderRadius: 10, textDecoration: 'none' }}>
           + 대회 만들기
         </Link>
       </div>
 
-      <div className="space-y-2">
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
         {competitions?.map(c => (
-          <div key={c.id} className="bg-white border border-gray-200 rounded-2xl px-4 py-3 flex items-center justify-between gap-3">
-            <div className="min-w-0">
-              <p className="font-medium text-gray-900 truncate">{c.name}</p>
-              <p className="text-sm text-gray-500">{c.start_date} – {c.end_date}</p>
+          <div key={c.id} style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 14, padding: '12px 14px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
+            <div style={{ minWidth: 0 }}>
+              <p style={{ fontSize: 14, fontWeight: 500, color: 'var(--text)', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{c.name}</p>
+              <p style={{ fontSize: 12, color: 'var(--text-muted)', margin: '2px 0 0' }}>{c.start_date} – {c.end_date}</p>
             </div>
-            <div className="flex items-center gap-2 shrink-0">
-              <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${STATUS_COLOR[c.status]}`}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexShrink: 0 }}>
+              <span style={{ fontSize: 11, fontWeight: 500, padding: '3px 8px', borderRadius: 4, ...STATUS_STYLE[c.status] }}>
                 {STATUS_LABEL[c.status]}
               </span>
-              <div className="flex gap-3">
-                <Link href={`/admin/competitions/${c.id}`} className="text-sm text-gray-500 hover:text-gray-700">
-                  Organizer
-                </Link>
-                <Link href={`/competitions/${c.id}/manage`} className="text-sm text-blue-600 hover:text-blue-800">
-                  관리 →
-                </Link>
+              <div style={{ display: 'flex', gap: 14 }}>
+                <Link href={`/admin/competitions/${c.id}`} style={{ fontSize: 13, color: 'var(--text-muted)', textDecoration: 'none' }}>Organizer</Link>
+                <Link href={`/competitions/${c.id}/manage`} style={{ fontSize: 13, color: 'var(--orange)', textDecoration: 'none' }}>관리 →</Link>
               </div>
             </div>
           </div>
         ))}
         {!competitions?.length && (
-          <p className="text-center py-12 text-gray-400">대회가 없습니다.</p>
+          <p style={{ textAlign: 'center', padding: '60px 0', color: 'var(--text-dim)', fontSize: 13 }}>대회가 없습니다.</p>
         )}
       </div>
     </div>

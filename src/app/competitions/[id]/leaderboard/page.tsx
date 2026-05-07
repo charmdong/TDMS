@@ -83,7 +83,11 @@ async function DivisionLeaderboard({ divisionId, divisionName, workouts, competi
 
   const formatScore = (value: number | null, scoreType: string) => {
     if (value === null) return '—'
-    if (scoreType === 'for_time') return `${value}s`
+    if (scoreType === 'for_time') {
+      const m = Math.floor(value / 60)
+      const s = value % 60
+      return `${m}:${String(s).padStart(2, '0')}`
+    }
     if (scoreType === 'max_weight') return `${value}kg`
     return `${value}`
   }

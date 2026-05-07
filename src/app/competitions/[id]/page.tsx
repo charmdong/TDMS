@@ -55,9 +55,9 @@ export default async function CompetitionPage({ params }: { params: Promise<{ id
 
         {/* Header */}
         <div style={{ padding: 20, borderBottom: '1px solid var(--border)', position: 'relative', overflow: 'hidden' }}>
-          <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 100% 0%, rgba(244,80,30,.08) 0%, transparent 55%)', pointerEvents: 'none' }} />
+          <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 100% 0%, rgba(224,62,16,.05) 0%, transparent 55%)', pointerEvents: 'none' }} />
           <div style={{ display: 'flex', gap: 6, marginBottom: 10 }}>
-            <span style={{ fontSize: 10, fontWeight: 500, padding: '3px 8px', borderRadius: 4, background: competition.status === 'in_progress' ? 'rgba(60,160,80,.15)' : competition.status === 'open' ? 'var(--orange-dim)' : 'rgba(255,255,255,.06)', color: competition.status === 'in_progress' ? '#7ab82e' : competition.status === 'open' ? 'var(--orange)' : 'var(--text-dim)' }}>
+            <span style={{ fontSize: 10, fontWeight: 500, padding: '3px 8px', borderRadius: 4, background: competition.status === 'in_progress' ? 'rgba(34,139,34,.1)' : competition.status === 'open' ? 'var(--orange-dim)' : 'rgba(0,0,0,.05)', color: competition.status === 'in_progress' ? '#1a7a1a' : competition.status === 'open' ? 'var(--orange)' : 'var(--text-dim)' }}>
               {STATUS_LABEL[competition.status]}
             </span>
             {dday !== null && dday > 0 && dday <= 14 && (
@@ -81,11 +81,11 @@ export default async function CompetitionPage({ params }: { params: Promise<{ id
 
         {/* Registration state */}
         {isRegistered ? (
-          <div style={{ padding: '14px 16px', borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'rgba(60,160,80,.05)' }}>
+          <div style={{ padding: '14px 16px', borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'rgba(34,139,34,.06)' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <CheckCircle size={14} color="#7ab82e" />
+              <CheckCircle size={14} color="#1a7a1a" />
               <div>
-                <p style={{ fontSize: 13, fontWeight: 500, color: '#7ab82e', margin: 0 }}>참가 신청 완료</p>
+                <p style={{ fontSize: 13, fontWeight: 500, color: '#1a7a1a', margin: 0 }}>참가 신청 완료</p>
                 <p style={{ fontSize: 11, color: 'var(--text-dim)', margin: 0 }}>{registeredDivision?.name}</p>
               </div>
             </div>

@@ -10,10 +10,10 @@ const STATUS_LABEL: Record<string, string> = {
 }
 
 const cardAccents = [
-  { bg: '#1a0f0a', pattern: 'radial-gradient(ellipse at 20% 50%, rgba(244,80,30,.25) 0%, transparent 60%)' },
-  { bg: '#0a0e1a', pattern: 'radial-gradient(ellipse at 80% 50%, rgba(55,100,200,.2) 0%, transparent 60%)' },
-  { bg: '#0a1a0f', pattern: 'radial-gradient(ellipse at 50% 20%, rgba(60,160,80,.2) 0%, transparent 60%)' },
-  { bg: '#150a1a', pattern: 'radial-gradient(ellipse at 20% 80%, rgba(140,60,200,.2) 0%, transparent 60%)' },
+  { bg: '#FEF0EB', pattern: 'radial-gradient(ellipse at 20% 50%, rgba(224,62,16,.15) 0%, transparent 60%)' },
+  { bg: '#EBF0FE', pattern: 'radial-gradient(ellipse at 80% 50%, rgba(55,100,200,.12) 0%, transparent 60%)' },
+  { bg: '#EBFAEE', pattern: 'radial-gradient(ellipse at 50% 20%, rgba(60,160,80,.12) 0%, transparent 60%)' },
+  { bg: '#F5EBFE', pattern: 'radial-gradient(ellipse at 20% 80%, rgba(140,60,200,.12) 0%, transparent 60%)' },
 ]
 
 function CompetitionCard({ c, idx }: { c: Competition; idx: number }) {
@@ -30,9 +30,8 @@ function CompetitionCard({ c, idx }: { c: Competition; idx: number }) {
       <div className="card-hover" style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 12, overflow: 'hidden', cursor: 'pointer' }}>
         {/* Banner */}
         <div style={{ height: 72, background: accent.bg, backgroundImage: accent.pattern, position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'flex-end', padding: '0 12px' }}>
-          <div style={{ position: 'absolute', inset: 0, backgroundImage: 'repeating-linear-gradient(45deg, rgba(255,255,255,.015) 0px, rgba(255,255,255,.015) 1px, transparent 1px, transparent 12px)' }} />
           {dday !== null && (
-            <span style={{ fontSize: 10, fontWeight: 500, position: 'relative', color: isUrgent ? 'var(--orange)' : 'rgba(255,255,255,.3)', background: isUrgent ? 'rgba(244,80,30,.15)' : 'rgba(255,255,255,.06)', border: `1px solid ${isUrgent ? 'rgba(244,80,30,.35)' : 'rgba(255,255,255,.08)'}`, padding: '3px 8px', borderRadius: 4 }}>
+            <span style={{ fontSize: 10, fontWeight: 500, position: 'relative', color: isUrgent ? 'var(--orange)' : 'var(--text-dim)', background: isUrgent ? 'var(--orange-dim)' : 'rgba(0,0,0,.06)', border: `1px solid ${isUrgent ? 'var(--orange-border)' : 'rgba(0,0,0,.1)'}`, padding: '3px 8px', borderRadius: 4 }}>
               {dday > 0 ? `D-${dday}` : '마감'}
             </span>
           )}
@@ -41,7 +40,7 @@ function CompetitionCard({ c, idx }: { c: Competition; idx: number }) {
         {/* Content */}
         <div style={{ padding: 14 }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
-            <span style={{ fontSize: 10, fontWeight: 500, padding: '3px 8px', borderRadius: 4, background: c.status === 'in_progress' ? 'rgba(60,160,80,.15)' : c.status === 'open' ? 'rgba(55,100,200,.15)' : 'rgba(255,255,255,.06)', color: c.status === 'in_progress' ? '#7ab82e' : c.status === 'open' ? '#5b9fd4' : 'var(--text-dim)', letterSpacing: 0.3 }}>
+            <span style={{ fontSize: 10, fontWeight: 500, padding: '3px 8px', borderRadius: 4, background: c.status === 'in_progress' ? 'rgba(34,139,34,.1)' : c.status === 'open' ? 'rgba(55,100,200,.1)' : 'rgba(0,0,0,.05)', color: c.status === 'in_progress' ? '#1a7a1a' : c.status === 'open' ? '#2255b0' : 'var(--text-dim)', letterSpacing: 0.3 }}>
               {STATUS_LABEL[c.status]}
             </span>
           </div>
@@ -76,7 +75,7 @@ export default async function HomePage() {
       {/* Hero */}
       {hero && (
         <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 14, padding: 20, marginBottom: 24, position: 'relative', overflow: 'hidden' }}>
-          <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 90% 50%, rgba(244,80,30,.07) 0%, transparent 60%)', pointerEvents: 'none' }} />
+          <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 90% 50%, rgba(224,62,16,.05) 0%, transparent 60%)', pointerEvents: 'none' }} />
           {hero.registration_deadline && (() => {
             const d = Math.ceil((new Date(hero.registration_deadline).getTime() - Date.now()) / 86400000)
             return d > 0 && d <= 14 ? (

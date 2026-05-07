@@ -7,7 +7,18 @@ const SCORE_TYPE_LABEL: Record<string, string> = {
   for_time: 'For Time', amrap: 'AMRAP', max_weight: 'Max Weight',
 }
 const SCORE_UNIT: Record<string, string> = {
-  for_time: '초', amrap: '회', max_weight: 'kg',
+  amrap: '회', max_weight: 'kg',
+}
+
+function secsToMmss(totalSecs: number): string {
+  const m = Math.floor(totalSecs / 60)
+  const s = totalSecs % 60
+  return `${m}:${String(s).padStart(2, '0')}`
+}
+
+function formatDisplayValue(value: number, scoreType: string): string {
+  if (scoreType === 'for_time') return secsToMmss(value)
+  return `${value}${SCORE_UNIT[scoreType] ?? ''}`
 }
 
 export default async function SubmitPage({ params }: { params: Promise<{ id: string }> }) {
@@ -55,7 +66,7 @@ export default async function SubmitPage({ params }: { params: Promise<{ id: str
                   </div>
                 </div>
                 {existing && (
-                  <span style={{ fontSize: 10, fontWeight: 500, padding: '3px 8px', borderRadius: 4, display: 'flex', alignItems: 'center', gap: 4, background: existing.status === 'confirmed' ? 'rgba(60,160,80,.15)' : 'rgba(244,180,0,.1)', color: existing.status === 'confirmed' ? '#7ab82e' : '#d4a500', border: `1px solid ${existing.status === 'confirmed' ? 'rgba(60,160,80,.3)' : 'rgba(244,180,0,.2)'}` }}>
+                  <span style={{ fontSize: 10, fontWeight: 500, padding: '3px 8px', borderRadius: 4, display: 'flex', alignItems: 'center', gap: 4, background: existing.status === 'confirmed' ? 'rgba(34,139,34,.1)' : 'rgba(200,140,0,.1)', color: existing.status === 'confirmed' ? '#1a7a1a' : '#a07000', border: `1px solid ${existing.status === 'confirmed' ? 'rgba(34,139,34,.25)' : 'rgba(200,140,0,.25)'}` }}>
                     <CheckCircle size={10} />
                     {existing.status === 'confirmed' ? '승인됨' : '검토 중'}
                   </span>
@@ -68,17 +79,42 @@ export default async function SubmitPage({ params }: { params: Promise<{ id: str
                 </div>
               ) : existing?.status === 'confirmed' ? (
                 <p style={{ fontSize: 13, color: 'var(--text-muted)', margin: 0 }}>
-                  제출 점수: <strong style={{ color: 'var(--text)' }}>{existing.value}{SCORE_UNIT[w.score_type]}</strong>
+                  제출 점수: <strong style={{ color: 'var(--text)' }}>{formatDisplayValue(existing.value, w.score_type)}</strong>
                 </p>
               ) : (
                 <form action={submitScore} style={{ display: 'flex', gap: 8 }}>
                   <input type="hidden" name="competition_id" value={id} />
                   <input type="hidden" name="workout_id" value={w.id} />
                   <input type="hidden" name="division_id" value={registration.division_id!} />
+                  <input type="hidden" name="score_type" value={w.score_type} />
                   <div style={{ flex: 1, position: 'relative' }}>
-                    <input name="value" type="number" step="0.1" min="0" required defaultValue={existing?.value ?? ''} placeholder="0"
-                      style={{ width: '100%', background: 'var(--surface-2)', border: '1px solid var(--border)', borderRadius: 8, padding: '10px 40px 10px 12px', fontSize: 14, color: 'var(--text)', fontFamily: 'inherit', outline: 'none', boxSizing: 'border-box' }} />
-                    <span style={{ position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)', fontSize: 12, color: 'var(--text-dim)' }}>{SCORE_UNIT[w.score_type]}</span>
+                    {w.score_type === 'for_time' ? (
+                      <input
+                        name="value"
+                        type="text"
+                        inputMode="numeric"
+                        required
+                        defaultValue={existing?.value != null ? secsToMmss(existing.value) : ''}
+                        placeholder="0:00"
+                        pattern="[0-9]+:[0-5][0-9](\.[0-9]+)?"
+                        title="분:초 형식으로 입력하세요 (예: 12:34)"
+                        style={{ width: '100%', background: 'var(--surface-2)', border: '1px solid var(--border)', borderRadius: 8, padding: '10px 56px 10px 12px', fontSize: 14, color: 'var(--text)', fontFamily: 'inherit', outline: 'none', boxSizing: 'border-box' }}
+                      />
+                    ) : (
+                      <input
+                        name="value"
+                        type="number"
+                        step="0.1"
+                        min="0"
+                        required
+                        defaultValue={existing?.value ?? ''}
+                        placeholder="0"
+                        style={{ width: '100%', background: 'var(--surface-2)', border: '1px solid var(--border)', borderRadius: 8, padding: '10px 40px 10px 12px', fontSize: 14, color: 'var(--text)', fontFamily: 'inherit', outline: 'none', boxSizing: 'border-box' }}
+                      />
+                    )}
+                    <span style={{ position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)', fontSize: 12, color: 'var(--text-dim)' }}>
+                      {w.score_type === 'for_time' ? 'mm:ss' : SCORE_UNIT[w.score_type]}
+                    </span>
                   </div>
                   <button type="submit" style={{ padding: '10px 18px', background: 'var(--orange)', border: 'none', color: '#fff', fontSize: 13, fontWeight: 500, borderRadius: 8, cursor: 'pointer', fontFamily: 'inherit', flexShrink: 0 }}>
                     {existing ? '수정' : '제출'}

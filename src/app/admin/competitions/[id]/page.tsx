@@ -8,59 +8,48 @@ export default async function AdminCompetitionPage({ params }: { params: Promise
 
   const [{ data: competition }, { data: organizers }] = await Promise.all([
     supabase.from('competitions').select('*').eq('id', id).single(),
-    supabase
-      .from('organizers')
-      .select('user_id, profiles(name)')
-      .eq('competition_id', id),
+    supabase.from('organizers').select('user_id, profiles(name)').eq('competition_id', id),
   ])
 
   if (!competition) notFound()
 
   return (
-    <div className="max-w-lg space-y-6">
+    <div style={{ maxWidth: 520, display: 'flex', flexDirection: 'column', gap: 20 }}>
       <div>
-        <a href="/admin" className="text-sm text-gray-500 hover:text-gray-700">← 대시보드</a>
-        <h1 className="text-xl font-bold mt-1">{competition.name}</h1>
+        <a href="/admin" style={{ fontSize: 12, color: 'var(--text-dim)', textDecoration: 'none' }}>← 대시보드</a>
+        <h1 style={{ fontSize: 18, fontWeight: 500, color: 'var(--text)', margin: '6px 0 0' }}>{competition.name}</h1>
       </div>
 
-      <section className="bg-white border border-gray-200 rounded-2xl p-4 space-y-3">
-        <h2 className="font-semibold text-gray-700">Organizer 배정</h2>
-        <div className="space-y-1">
+      <section style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 14, padding: 16, display: 'flex', flexDirection: 'column', gap: 12 }}>
+        <h2 style={{ fontSize: 13, fontWeight: 500, color: 'var(--text)', margin: 0 }}>Organizer 배정</h2>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
           {organizers?.map(o => {
             const profile = o.profiles as { name: string } | null
             return (
-              <div key={o.user_id} className="text-sm text-gray-700 flex items-center gap-2">
-                <span className="w-2 h-2 bg-green-500 rounded-full" />
+              <div key={o.user_id} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: 'var(--text-muted)' }}>
+                <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#1a7a1a', flexShrink: 0 }} />
                 {profile?.name ?? o.user_id}
               </div>
             )
           })}
-          {!organizers?.length && <p className="text-sm text-gray-400">배정된 Organizer 없음</p>}
+          {!organizers?.length && <p style={{ fontSize: 13, color: 'var(--text-dim)', margin: 0 }}>배정된 Organizer 없음</p>}
         </div>
-        <form action={addOrganizer} className="flex gap-2 pt-2">
+        <form action={addOrganizer} style={{ display: 'flex', gap: 8, paddingTop: 4 }}>
           <input type="hidden" name="competition_id" value={id} />
           <input
             name="user_id"
             placeholder="User UUID (Supabase 대시보드에서 확인)"
             required
-            className="flex-1 rounded-xl border border-gray-300 px-3 py-2 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-gray-900"
+            style={{ flex: 1, borderRadius: 10, border: '1px solid var(--border)', padding: '8px 12px', fontSize: 12, fontFamily: 'monospace', background: 'var(--surface)', color: 'var(--text)', outline: 'none' }}
           />
-          <button
-            type="submit"
-            className="px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-xl hover:bg-gray-700"
-          >
-            배정
-          </button>
+          <button type="submit" style={{ padding: '8px 16px', background: 'var(--text)', color: 'var(--bg)', fontSize: 13, fontWeight: 500, borderRadius: 10, border: 'none', cursor: 'pointer' }}>배정</button>
         </form>
-        <p className="text-xs text-gray-400">
+        <p style={{ fontSize: 11, color: 'var(--text-dim)', margin: 0 }}>
           User UUID는 Supabase 대시보드 → Authentication → Users에서 확인하세요.
         </p>
       </section>
 
-      <a
-        href={`/competitions/${id}/manage`}
-        className="block text-sm text-blue-600 hover:text-blue-800"
-      >
+      <a href={`/competitions/${id}/manage`} style={{ fontSize: 13, color: 'var(--orange)', textDecoration: 'none' }}>
         대회 관리 페이지 →
       </a>
     </div>

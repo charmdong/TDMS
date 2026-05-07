@@ -2,6 +2,8 @@ import { requireUser } from '@/lib/auth'
 import { notFound, redirect } from 'next/navigation'
 import { registerAthlete } from './actions'
 
+const inputStyle = { width: '100%', borderRadius: 10, border: '1px solid var(--border)', padding: '8px 12px', fontSize: 13, background: 'var(--surface)', color: 'var(--text)', outline: 'none', boxSizing: 'border-box' as const }
+
 export default async function RegisterPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
   const { supabase, user } = await requireUser()
@@ -23,47 +25,47 @@ export default async function RegisterPage({ params }: { params: Promise<{ id: s
   if (deadlinePassed) redirect(`/competitions/${id}`)
 
   return (
-    <div className="max-w-md mx-auto space-y-6">
+    <div style={{ maxWidth: 480, margin: '0 auto', padding: 16, display: 'flex', flexDirection: 'column', gap: 20 }}>
       <div>
-        <a href={`/competitions/${id}`} className="text-sm text-gray-500 hover:text-gray-700">← 대회 정보</a>
-        <h1 className="text-xl font-bold mt-1">참가 신청</h1>
-        <p className="text-sm text-gray-500 mt-1">{competition.name}</p>
+        <a href={`/competitions/${id}`} style={{ fontSize: 12, color: 'var(--text-dim)', textDecoration: 'none' }}>← 대회 정보</a>
+        <h1 style={{ fontSize: 18, fontWeight: 500, color: 'var(--text)', margin: '6px 0 2px' }}>참가 신청</h1>
+        <p style={{ fontSize: 13, color: 'var(--text-muted)', margin: 0 }}>{competition.name}</p>
       </div>
 
-      <form action={registerAthlete} className="space-y-4">
+      <form action={registerAthlete} style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
         <input type="hidden" name="competition_id" value={id} />
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">이름</label>
+          <label style={{ display: 'block', fontSize: 12, color: 'var(--text-muted)', marginBottom: 4 }}>이름</label>
           <input
             type="text"
             value={profile?.name ?? ''}
             disabled
-            className="w-full rounded-xl border border-gray-200 px-3 py-2 text-sm bg-gray-50 text-gray-500"
+            style={{ ...inputStyle, background: 'var(--surface-2)', color: 'var(--text-dim)' }}
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">소속 박스</label>
+          <label style={{ display: 'block', fontSize: 12, color: 'var(--text-muted)', marginBottom: 4 }}>소속 박스</label>
           <input
             name="affiliate"
             type="text"
             defaultValue={profile?.affiliate ?? ''}
             placeholder="CrossFit Anywhere"
-            className="w-full rounded-xl border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900"
+            style={inputStyle}
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">부문 선택 *</label>
+          <label style={{ display: 'block', fontSize: 12, color: 'var(--text-muted)', marginBottom: 8 }}>부문 선택 *</label>
           {!divisions?.length ? (
-            <p className="text-sm text-gray-400">등록된 부문이 없습니다.</p>
+            <p style={{ fontSize: 13, color: 'var(--text-dim)' }}>등록된 부문이 없습니다.</p>
           ) : (
-            <div className="space-y-2">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
               {divisions.map(d => (
-                <label key={d.id} className="flex items-center gap-3 p-3 border border-gray-200 rounded-xl cursor-pointer hover:border-gray-400 has-[:checked]:border-gray-900 has-[:checked]:bg-gray-50">
-                  <input type="radio" name="division_id" value={d.id} required className="accent-gray-900" />
-                  <span className="text-sm font-medium text-gray-900">{d.name}</span>
+                <label key={d.id} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: 12, border: '1px solid var(--border)', borderRadius: 10, cursor: 'pointer' }}>
+                  <input type="radio" name="division_id" value={d.id} required style={{ accentColor: 'var(--text)' }} />
+                  <span style={{ fontSize: 13, fontWeight: 500, color: 'var(--text)' }}>{d.name}</span>
                 </label>
               ))}
             </div>
@@ -73,7 +75,7 @@ export default async function RegisterPage({ params }: { params: Promise<{ id: s
         <button
           type="submit"
           disabled={!divisions?.length}
-          className="w-full py-3 bg-gray-900 text-white font-medium rounded-xl hover:bg-gray-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+          style={{ width: '100%', padding: '12px 0', background: 'var(--text)', color: 'var(--bg)', fontSize: 14, fontWeight: 500, borderRadius: 10, border: 'none', cursor: 'pointer', marginTop: 4, opacity: divisions?.length ? 1 : 0.4 }}
         >
           신청 완료
         </button>
