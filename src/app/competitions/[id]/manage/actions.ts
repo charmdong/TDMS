@@ -55,6 +55,39 @@ export async function toggleLeaderboard(formData: FormData) {
   revalidatePath(`/competitions/${competition_id}/manage`)
 }
 
+export async function updateCompetition(formData: FormData) {
+  const competition_id = formData.get('competition_id') as string
+  const { supabase } = await requireOrganizer(competition_id)
+
+  await supabase.from('competitions').update({
+    name: formData.get('name') as string,
+    location: (formData.get('location') as string) || null,
+    start_date: formData.get('start_date') as string,
+    end_date: formData.get('end_date') as string,
+    registration_deadline: (formData.get('registration_deadline') as string) || null,
+    description: (formData.get('description') as string) || null,
+  }).eq('id', competition_id)
+
+  revalidatePath(`/competitions/${competition_id}/manage`)
+  revalidatePath(`/competitions/${competition_id}`)
+  revalidatePath('/')
+}
+
+export async function updateWorkout(formData: FormData) {
+  const competition_id = formData.get('competition_id') as string
+  const { supabase } = await requireOrganizer(competition_id)
+  const id = formData.get('id') as string
+
+  await supabase.from('workouts').update({
+    name: formData.get('name') as string,
+    description: (formData.get('description') as string) || null,
+    sort_order: Number(formData.get('sort_order') ?? 0),
+    submission_deadline: (formData.get('submission_deadline') as string) || null,
+  }).eq('id', id)
+
+  revalidatePath(`/competitions/${competition_id}/manage`)
+}
+
 export async function updateStatus(formData: FormData) {
   const competition_id = formData.get('competition_id') as string
   const { supabase } = await requireOrganizer(competition_id)

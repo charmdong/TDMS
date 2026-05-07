@@ -1,6 +1,6 @@
 import { requireOrganizer } from '@/lib/auth'
 import { notFound } from 'next/navigation'
-import { addDivision, deleteDivision, addWorkout, deleteWorkout, toggleLeaderboard, updateStatus } from './actions'
+import { addDivision, deleteDivision, addWorkout, deleteWorkout, toggleLeaderboard, updateStatus, updateCompetition, updateWorkout } from './actions'
 
 const STATUSES = [
   { value: 'draft', label: '준비 중' },
@@ -14,7 +14,7 @@ const SCORE_TYPES = [
   { value: 'max_weight', label: 'Max Weight' },
 ]
 
-const inputStyle = { width: '100%', borderRadius: 10, border: '1px solid var(--border)', padding: '8px 12px', fontSize: 13, background: 'var(--surface)', color: 'var(--text)', outline: 'none' }
+const inputStyle = { width: '100%', borderRadius: 10, border: '1px solid var(--border)', padding: '8px 12px', fontSize: 13, background: 'var(--surface)', color: 'var(--text)', outline: 'none', boxSizing: 'border-box' as const }
 const sectionStyle = { background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 14, padding: 16 }
 
 export default async function ManagePage({ params }: { params: Promise<{ id: string }> }) {
@@ -28,6 +28,9 @@ export default async function ManagePage({ params }: { params: Promise<{ id: str
   ])
 
   if (!competition) notFound()
+
+  // datetime-local 입력 형식으로 변환 (초 제거)
+  const toDatetimeLocal = (iso: string | null) => iso ? iso.slice(0, 16) : ''
 
   return (
     <div style={{ maxWidth: 680, margin: '0 auto', padding: 16, display: 'flex', flexDirection: 'column', gap: 20 }}>
@@ -61,6 +64,41 @@ export default async function ManagePage({ params }: { params: Promise<{ id: str
         </div>
       </section>
 
+      {/* Competition info edit */}
+      <section style={sectionStyle}>
+        <h2 style={{ fontSize: 13, fontWeight: 500, color: 'var(--text)', marginBottom: 14 }}>대회 정보 수정</h2>
+        <form action={updateCompetition} style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+          <input type="hidden" name="competition_id" value={id} />
+          <div>
+            <label style={{ display: 'block', fontSize: 11, color: 'var(--text-dim)', marginBottom: 4 }}>대회명 *</label>
+            <input name="name" required defaultValue={competition.name} style={inputStyle} />
+          </div>
+          <div>
+            <label style={{ display: 'block', fontSize: 11, color: 'var(--text-dim)', marginBottom: 4 }}>장소</label>
+            <input name="location" defaultValue={competition.location ?? ''} style={inputStyle} />
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+            <div>
+              <label style={{ display: 'block', fontSize: 11, color: 'var(--text-dim)', marginBottom: 4 }}>시작일 *</label>
+              <input name="start_date" type="date" required defaultValue={competition.start_date} style={inputStyle} />
+            </div>
+            <div>
+              <label style={{ display: 'block', fontSize: 11, color: 'var(--text-dim)', marginBottom: 4 }}>종료일 *</label>
+              <input name="end_date" type="date" required defaultValue={competition.end_date} style={inputStyle} />
+            </div>
+          </div>
+          <div>
+            <label style={{ display: 'block', fontSize: 11, color: 'var(--text-dim)', marginBottom: 4 }}>참가 신청 마감</label>
+            <input name="registration_deadline" type="datetime-local" defaultValue={toDatetimeLocal(competition.registration_deadline)} style={inputStyle} />
+          </div>
+          <div>
+            <label style={{ display: 'block', fontSize: 11, color: 'var(--text-dim)', marginBottom: 4 }}>대회 소개</label>
+            <textarea name="description" rows={3} defaultValue={competition.description ?? ''} style={{ ...inputStyle, resize: 'vertical' }} />
+          </div>
+          <button type="submit" style={{ padding: '9px 0', background: 'var(--text)', color: 'var(--bg)', fontSize: 13, fontWeight: 500, borderRadius: 10, border: 'none', cursor: 'pointer' }}>저장</button>
+        </form>
+      </section>
+
       {/* Divisions */}
       <section style={sectionStyle}>
         <h2 style={{ fontSize: 13, fontWeight: 500, color: 'var(--text)', marginBottom: 12 }}>부문 (Division)</h2>
@@ -86,28 +124,55 @@ export default async function ManagePage({ params }: { params: Promise<{ id: str
       {/* Workouts */}
       <section style={sectionStyle}>
         <h2 style={{ fontSize: 13, fontWeight: 500, color: 'var(--text)', marginBottom: 12 }}>워크아웃</h2>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 16 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 16 }}>
           {workouts?.map((w, i) => (
-            <div key={w.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8, padding: '10px 12px', background: 'var(--surface-2)', borderRadius: 10, border: '1px solid var(--border)' }}>
-              <div style={{ minWidth: 0 }}>
-                <p style={{ fontSize: 13, fontWeight: 500, color: 'var(--text)', margin: 0 }}>{i + 1}. {w.name}</p>
-                <p style={{ fontSize: 11, color: 'var(--text-dim)', margin: '2px 0 0' }}>{w.score_type.replace('_', ' ')}</p>
+            <div key={w.id} style={{ border: '1px solid var(--border)', borderRadius: 10, overflow: 'hidden' }}>
+              {/* Header row */}
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8, padding: '10px 12px', background: 'var(--surface-2)' }}>
+                <div style={{ minWidth: 0 }}>
+                  <p style={{ fontSize: 13, fontWeight: 500, color: 'var(--text)', margin: 0 }}>{i + 1}. {w.name}</p>
+                  <p style={{ fontSize: 11, color: 'var(--text-dim)', margin: '2px 0 0' }}>{w.score_type.replace('_', ' ')}</p>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
+                  <form action={toggleLeaderboard}>
+                    <input type="hidden" name="competition_id" value={id} />
+                    <input type="hidden" name="id" value={w.id} />
+                    <input type="hidden" name="visible" value={String(w.leaderboard_visible)} />
+                    <button type="submit" style={{ fontSize: 11, padding: '3px 8px', borderRadius: 6, border: '1px solid', cursor: 'pointer', background: w.leaderboard_visible ? 'rgba(34,139,34,.1)' : 'var(--surface)', color: w.leaderboard_visible ? '#1a7a1a' : 'var(--text-dim)', borderColor: w.leaderboard_visible ? 'rgba(34,139,34,.25)' : 'var(--border)' }}>
+                      {w.leaderboard_visible ? '공개 중' : '비공개'}
+                    </button>
+                  </form>
+                  <form action={deleteWorkout}>
+                    <input type="hidden" name="competition_id" value={id} />
+                    <input type="hidden" name="id" value={w.id} />
+                    <button type="submit" style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 12, color: 'var(--text-dim)' }}>삭제</button>
+                  </form>
+                </div>
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
-                <form action={toggleLeaderboard}>
-                  <input type="hidden" name="competition_id" value={id} />
-                  <input type="hidden" name="id" value={w.id} />
-                  <input type="hidden" name="visible" value={String(w.leaderboard_visible)} />
-                  <button type="submit" style={{ fontSize: 11, padding: '3px 8px', borderRadius: 6, border: '1px solid', cursor: 'pointer', background: w.leaderboard_visible ? 'rgba(34,139,34,.1)' : 'var(--surface)', color: w.leaderboard_visible ? '#1a7a1a' : 'var(--text-dim)', borderColor: w.leaderboard_visible ? 'rgba(34,139,34,.25)' : 'var(--border)' }}>
-                    {w.leaderboard_visible ? '공개 중' : '비공개'}
-                  </button>
-                </form>
-                <form action={deleteWorkout}>
-                  <input type="hidden" name="competition_id" value={id} />
-                  <input type="hidden" name="id" value={w.id} />
-                  <button type="submit" style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 12, color: 'var(--text-dim)' }}>삭제</button>
-                </form>
-              </div>
+              {/* Edit form */}
+              <form action={updateWorkout} style={{ padding: '12px', display: 'flex', flexDirection: 'column', gap: 10 }}>
+                <input type="hidden" name="competition_id" value={id} />
+                <input type="hidden" name="id" value={w.id} />
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+                  <div>
+                    <label style={{ display: 'block', fontSize: 11, color: 'var(--text-dim)', marginBottom: 4 }}>이름</label>
+                    <input name="name" required defaultValue={w.name} style={inputStyle} />
+                  </div>
+                  <div>
+                    <label style={{ display: 'block', fontSize: 11, color: 'var(--text-dim)', marginBottom: 4 }}>순서</label>
+                    <input name="sort_order" type="number" defaultValue={w.sort_order} style={inputStyle} />
+                  </div>
+                </div>
+                <div>
+                  <label style={{ display: 'block', fontSize: 11, color: 'var(--text-dim)', marginBottom: 4 }}>제출 마감</label>
+                  <input name="submission_deadline" type="datetime-local" defaultValue={toDatetimeLocal(w.submission_deadline)} style={inputStyle} />
+                </div>
+                <div>
+                  <label style={{ display: 'block', fontSize: 11, color: 'var(--text-dim)', marginBottom: 4 }}>설명</label>
+                  <textarea name="description" rows={2} defaultValue={w.description ?? ''} style={{ ...inputStyle, resize: 'vertical' }} />
+                </div>
+                <button type="submit" style={{ padding: '7px 0', background: 'var(--surface-2)', color: 'var(--text-muted)', fontSize: 12, fontWeight: 500, borderRadius: 8, border: '1px solid var(--border)', cursor: 'pointer' }}>수정 저장</button>
+              </form>
             </div>
           ))}
         </div>

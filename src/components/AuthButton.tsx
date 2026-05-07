@@ -27,7 +27,7 @@ export default async function AuthButton() {
           ADMIN
         </Link>
       )}
-      <span style={{ fontSize: 13, color: 'var(--text-muted)' }}>{profile?.name}</span>
+      <Link href="/profile" style={{ fontSize: 13, color: 'var(--text-muted)', textDecoration: 'none' }}>{profile?.name}</Link>
       <form action={signOut}>
         <button type="submit" style={{ fontSize: 12, color: 'var(--text-dim)', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>
           로그아웃
